@@ -78,6 +78,7 @@ table td:hover {
   background-color: #ccc;
 }
 
-#chat {
+#chatMessages {
+  height: 97%;
   overflow: auto;
 }
