@@ -1,14 +1,57 @@
-#img {
-  display: block;
-  margin: auto;
-  height: 128px;
-  width: 128px;
-  padding: 2rem;
+.window {
+  position: relative;
+  width: 300px;
+  height: 600px;
+  border: 4px solid #999;
+  float: left;
 }
 
-#canvas {
-  display: block;
-  margin: 2rem auto;
-  width: 540px;
-  height: 540px;
+.svgImage {
+  text-align: center;
+}
+
+svg {
+  width: 70%;
+  height: 70%;
+}
+
+.hangmanWord {
+  width: 100%;
+  float: left;
+  text-align: center;
+  font-size: 2em;
+}
+
+.enterLetter {
+  float: left;
+}
+
+.wrongGuesses {
+  float: left;
+  width: 100%;
+  font-size: 2em;
+  text-align: center;
+}
+
+.wrongGuesses p {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.wonOrLost {
+  float: left;
+  width: 100%;
+  font-size: 2em;
+  text-align: center;
+}
+
+.wonOrLost p {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.restart {
+  width: 100%;
+  text-align: center;
+  float: left;
 }
