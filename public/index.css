@@ -77,3 +77,7 @@ table td:hover {
   cursor: pointer;
   background-color: #ccc;
 }
+
+#chat {
+  overflow: auto;
+}
