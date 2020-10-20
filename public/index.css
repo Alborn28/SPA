@@ -1,4 +1,5 @@
 .window {
+  text-align: center;
   position: relative;
   width: 300px;
   height: 600px;
@@ -6,9 +7,7 @@
   float: left;
 }
 
-.svgImage {
-  text-align: center;
-}
+/* Below is the styling of the Hangman window */
 
 svg {
   width: 70%;
@@ -18,7 +17,6 @@ svg {
 .hangmanWord {
   width: 100%;
   float: left;
-  text-align: center;
   font-size: 2em;
 }
 
@@ -30,7 +28,6 @@ svg {
   float: left;
   width: 100%;
   font-size: 2em;
-  text-align: center;
 }
 
 .wrongGuesses p {
@@ -42,7 +39,6 @@ svg {
   float: left;
   width: 100%;
   font-size: 2em;
-  text-align: center;
 }
 
 .wonOrLost p {
@@ -52,6 +48,31 @@ svg {
 
 .restart {
   width: 100%;
-  text-align: center;
   float: left;
+}
+
+/* Below is the styling of the Memory window */
+#content {
+  position: absolute;
+  margin: 0 auto;
+}
+
+table {
+  width: 300px;
+  height: 400px;
+}
+
+table td {
+  outline: 1px solid black;
+  width: 20%;
+  height: 50%;
+  text-align: center;
+  font-size: 5em;
+  background-color: #eee;
+  background-repeat: no-repeat;
+}
+
+table td:hover {
+  cursor: pointer;
+  background-color: #ccc;
 }
