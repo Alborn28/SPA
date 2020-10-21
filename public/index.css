@@ -8,6 +8,10 @@
   float: left;
 }
 
+.generateWindows {
+  position: relative;
+}
+
 /* Below is the styling of the Hangman window */
 
 svg {
@@ -83,8 +87,4 @@ table td:hover {
 .chatMessages {
   height: 97%;
   overflow: auto;
-}
-
-#generateChat {
-  position: relative;
 }

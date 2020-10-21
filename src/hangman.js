@@ -1,6 +1,3 @@
-'use strict'
-
-// Declare variables to be used
 const words = ['bus', 'car', 'bike', 'floor', 'name', 'door', 'rack', 'coat', 'screen', 'fridge', 'cheese', 'meat', 'table']
 let mistakes // Counter of how many incorrect guesses has been made
 let correctGuesses // Counter of how many correct guesses has been made
@@ -8,8 +5,12 @@ let incorrectLetters // Store the letters that has been guessed but are incorrec
 let correctWord // Store the correct word
 let output // An array that is the output to the user, at the start it consists of only underscores but will be filled with letters until it corresponds to the correctWord
 
-const button = document.getElementById('button')
-const restartButton = document.getElementById('restartButton')
+let button;
+let restartButton;
+let wordToGuess;
+let wrongGuesses;
+let wonOrLost;
+let enteredCharacter;
 
 // Create a module Hangman that handles the svg image of the hanging man
 window.Hangman = (function () {
@@ -84,120 +85,38 @@ window.Hangman = (function () {
   return hangman
 })()
 
-// Create a module Functions containing the functions used in the program
-window.Functions = (function () {
-  var setUp = function () {
-    // Start of by hiding all the parts
-    for (let i = 0; i < 9; i += 1) {
-      window.Hangman.hide(window.Hangman.validParts[i])
-    }
 
-    mistakes = 0
-    correctGuesses = 0
-    incorrectLetters = []
+function run(startButton, restartB, word, wrong, wonlost, character) {
+  button = startButton
+  restartButton = restartB
+  wordToGuess = word
+  wrongGuesses = wrong
+  wonOrLost = wonlost
+  enteredCharacter = character
 
-    // Pick out a random word
-    correctWord = words[Math.floor(Math.random() * (words.length - 1))]
+  console.log("Hangman started")
 
-    // Start with just underscores for each of the letters in the word
-    output = []
-    for (let i = 0; i < correctWord.length; i += 1) {
-      output.push('_')
-    }
-    document.getElementById('wordToGuess').innerHTML = output.join(' ')
-  }
-
-  // Store the indexes where the character appears in the word, return those indexes
-  var getCharacterIndexes = function (c) {
-    const indexOfChar = []
-    for (let i = 0; i < correctWord.length; i += 1) {
-      if (c === correctWord.charAt(i)) {
-        indexOfChar.push(i)
-      }
-    }
-
-    return indexOfChar
-  }
-
-  // Checks if the user made a correct guess or not and act accordingly
-  var checkGuess = function (char, indexOfChar) {
-    if (indexOfChar.length === 0 && !incorrectLetters.includes(char)) { // Incorrect guess
-      window.Hangman.show(window.Hangman.validParts[mistakes]) // Show a new part of the hanging man
-      mistakes += 1
-
-      incorrectLetters.push(char) // Store the guessed character
-      document.getElementById('wrongGuesses').innerHTML = incorrectLetters.join(' ') // Display all the characters that has been guessed wrong so far
-    } else if (!incorrectLetters.includes(char) && !output.includes(char)) { // Correct guess and has not been guessed before
-      correctGuesses += indexOfChar.length // Update the correctGuesses. Uses length of the indexOfChar, since the character may be in several places.
-
-      for (const i of indexOfChar) { // Input the character in all the places where it should be
-        output[i] = char
-      }
-
-      document.getElementById('wordToGuess').innerHTML = output.join(' ')
-    }
-  }
-
-  // Remove all the unneccessary objects from the page and display a "You lost"-message as well as show a restart button
-  var lost = function () {
-    document.getElementById('wonOrLost').innerHTML = 'You lost :('
-    document.getElementById('enteredCharacter').hidden = true
-    button.hidden = true
-    restartButton.hidden = false
-    document.getElementById('wordToGuess').innerHTML = correctWord
-    document.getElementById('wrongGuesses').innerHTML = ''
-  }
-
-  // Remove all the unneccessary objects from the page and display a "You won"-message as well as show a restart button
-  var won = function () {
-    document.getElementById('enteredCharacter').hidden = true
-    button.hidden = true
-    restartButton.hidden = false
-    document.getElementById('wrongGuesses').innerHTML = ''
-    document.getElementById('wonOrLost').innerHTML = 'You won! :)'
-  }
-
-  // Reset everything to how it was at the beginning and call the setUp function
-  var restart = function () {
-    restartButton.hidden = true
-    button.hidden = false
-    document.getElementById('enteredCharacter').hidden = false
-    document.getElementById('wonOrLost').innerHTML = ''
-    setUp()
-  }
-
-  return {
-    setUp: setUp,
-    getCharacterIndexes: getCharacterIndexes,
-    checkGuess: checkGuess,
-    lost: lost,
-    won: won,
-    restart: restart
-  }
-})()
-
-// Create a module main where the main part of the program is run.
-window.Main = (function () {
-  window.Functions.setUp()
+  setUp()
 
   button.addEventListener('click', function () {
+    console.log("Button clicked")
     // Run until you have either won or lost
     if (mistakes < 9 && correctGuesses < correctWord.length) {
-      var char = document.getElementById('enteredCharacter').value
-      document.getElementById('enteredCharacter').value = ''
+      var char = enteredCharacter.value
+      enteredCharacter.value = ''
 
       if (char.length === 1) {
-        const indexOfChar = window.Functions.getCharacterIndexes(char) // Get the indexes where the character occurs in the word, if any
-        window.Functions.checkGuess(char, indexOfChar) // Check if the character that the user guessed was correct or not
+        const indexOfChar = getCharacterIndexes(char) // Get the indexes where the character occurs in the word, if any
+        checkGuess(char, indexOfChar) // Check if the character that the user guessed was correct or not
 
         // If 9 mistakes are made, the user has won
         if (mistakes === 9) {
-          window.Functions.lost()
+          lost()
         }
 
         // If all the characters has been guessed, the user has won
         if (correctGuesses === correctWord.length) {
-          window.Functions.won()
+          won()
         }
       }
     }
@@ -205,8 +124,92 @@ window.Main = (function () {
 
   // See if the user wants to restart the game after he or she has either won or lost
   restartButton.addEventListener('click', function () {
-    window.Functions.restart()
+    restart()
   })
-})()
+}
 
-window.Main // Start the program
+function setUp() {
+  // Start of by hiding all the parts
+  for (let i = 0; i < 9; i += 1) {
+    window.Hangman.hide(window.Hangman.validParts[i])
+  }
+
+  mistakes = 0
+  correctGuesses = 0
+  incorrectLetters = []
+
+  // Pick out a random word
+  correctWord = words[Math.floor(Math.random() * (words.length - 1))]
+
+  // Start with just underscores for each of the letters in the word
+  output = []
+  for (let i = 0; i < correctWord.length; i += 1) {
+    output.push('_')
+  }
+  wordToGuess.innerHTML = output.join(' ')
+  console.log("Setup complete")
+}
+
+// Reset everything to how it was at the beginning and call the setUp function
+function restart() {
+  restartButton.hidden = true
+  button.hidden = false
+  enteredCharacter.hidden = false
+  wonOrLost.innerHTML = ''
+  setUp()
+}
+
+// Checks if the user made a correct guess or not and act accordingly
+function checkGuess(char, indexOfChar) {
+  if (indexOfChar.length === 0 && !incorrectLetters.includes(char)) { // Incorrect guess
+    window.Hangman.show(window.Hangman.validParts[mistakes]) // Show a new part of the hanging man
+    mistakes += 1
+
+    incorrectLetters.push(char) // Store the guessed character
+    wrongGuesses.innerHTML = incorrectLetters.join(' ') // Display all the characters that has been guessed wrong so far
+
+  } else if (!incorrectLetters.includes(char) && !output.includes(char)) { // Correct guess and has not been guessed before
+    correctGuesses += indexOfChar.length // Update the correctGuesses. Uses length of the indexOfChar, since the character may be in several places.
+
+    for (const i of indexOfChar) { // Input the character in all the places where it should be
+      output[i] = char
+    }
+
+    wordToGuess.innerHTML = output.join(' ')
+  }
+}
+
+// Store the indexes where the character appears in the word, return those indexes
+function getCharacterIndexes(c) {
+  const indexOfChar = []
+  for (let i = 0; i < correctWord.length; i += 1) {
+    if (c === correctWord.charAt(i)) {
+      indexOfChar.push(i)
+    }
+  }
+
+  return indexOfChar
+}
+
+// Remove all the unneccessary objects from the page and display a "You won"-message as well as show a restart button
+function won() {
+  enteredCharacter.hidden = true
+  button.hidden = true
+  restartButton.hidden = false
+  wrongGuesses.innerHTML = ''
+  wonOrLost.innerHTML = 'You won! :)'
+}
+
+// Remove all the unneccessary objects from the page and display a "You lost"-message as well as show a restart button
+function lost() {
+  wonOrLost.innerHTML = 'You lost :('
+  wordToGuess.hidden = true
+  button.hidden = true
+  restartButton.hidden = false
+  wordToGuess.innerHTML = correctWord
+  wrongGuesses.innerHTML = ''
+}
+
+export default {
+  run
+}

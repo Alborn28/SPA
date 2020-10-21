@@ -9,28 +9,7 @@
     <title>Snowpack App</title>
   </head>
   <body>
-    <div id = 'hangman' class = 'window'>
-        <div class = "hangmanWord">
-            <p id = "wordToGuess"></p>
-        </div>
-
-        <div class = "enterLetter">
-            <input class = "javascriptcharacter" type = "text" placeholder = "Enter a character" id = "enteredCharacter" required>
-            <input class = "javascriptbutton" id="button" type="button" value="Guess character" />
-        </div>
-
-        <div class = "wrongGuesses">
-            <p id = "wrongGuesses"></p>
-        </div>
-
-        <div class = "wonOrLost">
-            <p id = "wonOrLost"></p>
-        </div>
-
-        <div class = "restart">
-            <input id="restartButton" type="button" value="Restart" hidden="true" />
-        </div>
-
+    <div id = 'hangman' class = 'window', hidden = 'true'>
         <div class = 'svgImage'>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -515,8 +494,6 @@
                 </g>
             </svg>
         </div>
-
-        <script type="module" src="/_dist_/hangman.js"></script>
     </div>
 
     <div id = 'memory' class = 'window'>
@@ -534,8 +511,10 @@
 	<script type="module" src="/_dist_/memory.js"></script>
     </div>
 
-    <input id = "generateChat" value = "Chat", type="button">
+    <input id = "generateChat" value = "Chat" type="button" class = "generateWindows">
+    <input id = "generateHangman" value = "Hangman" type = "button" class = "generateWindows">
 
-    <script type="module" src="/_dist_/chatWindow.js"></script>
+    <script type = "module" src = "/_dist_/chatWindow.js"></script>
+    <script type = "module" src = "/_dist_/hangmanWindow.js"></script>
   </body> 
 </html>

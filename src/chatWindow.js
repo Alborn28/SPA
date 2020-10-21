@@ -2,7 +2,7 @@ import chat from '/_dist_/chat.js'
 import drag from '/_dist_/droppable.js'
 
 let generateChat = document.getElementById("generateChat")
-let counter = 0
+let counter = 1
 
 generateChat.addEventListener('click', event => {
     let chatWindow = document.createElement("div")
