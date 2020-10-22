@@ -1,20 +1,27 @@
-(function () {
+function run(td) {
     'use strict';
 
-    var nrOfBlocks = 10;
-    var hiddenBlocks = new Array(10);
-    var lockedBlocks = new Array(2);
-    var lockedCards = new Array(2);
-    var temp = document.getElementsByTagName('td');
-    var counter= 0;
+    let nrOfBlocks = 10;
+    let hiddenBlocks = new Array(10);
+    let lockedBlocks = new Array(2);
+    let lockedCards = new Array(2);
+    let temp = td
+    let counter= 0;
+
+    for (let i = 0; i < nrOfBlocks; i++) {
+        temp[i].onclick = function () {
+            displayHidden(i);
+        };
+        randomizeBlocks(i);
+    }
 
 
 
     function checkForDuplicates(nr) {
-        var isDuplicate = false;
-        var count = 0;
+        let isDuplicate = false;
+        let count = 0;
 
-        for (var i = 0; i < nrOfBlocks; i++) {
+        for (let i = 0; i < nrOfBlocks; i++) {
             if (hiddenBlocks[i] === nr) {
                 count++;
             }
@@ -28,7 +35,7 @@
 
 
     function randomizeBlocks(currPos) {
-        var randNr = Math.floor((Math.random() * 5) +1);
+        let randNr = Math.floor((Math.random() * 5) +1);
 
         while (checkForDuplicates(randNr)) {
             randNr = Math.floor((Math.random() * 5) +1);
@@ -39,9 +46,9 @@
 
 
     function toggleClickable() {
-        var box = document.getElementsByTagName('td');
+        let box = temp
 
-        for (var i = 0; i < nrOfBlocks; i++) {
+        for (let i = 0; i < nrOfBlocks; i++) {
             if (box[i].style.pointerEvents === 'none') {
                 box[i].style.pointerEvents = '';
             } else {
@@ -52,13 +59,13 @@
 
 
 
-    function checkMatch(currId) {
+    function checkMatch(currIndex) {
         if (counter === 1) {
-            lockedCards[0] = hiddenBlocks[currId];
-            lockedBlocks[0] = currId;
+            lockedCards[0] = hiddenBlocks[currIndex];
+            lockedBlocks[0] = currIndex;
         } else if (counter === 2) {
-            lockedCards[1] = hiddenBlocks[currId];
-            lockedBlocks[1] = currId;
+            lockedCards[1] = hiddenBlocks[currIndex];
+            lockedBlocks[1] = currIndex;
 
             if (lockedCards[0] === lockedCards[1]) {
                 window.console.log('yeey a match!');
@@ -68,21 +75,24 @@
                 toggleClickable();
 
                 window.setTimeout(function () {
-                    for (var i = 0; i < 2; i++) {
-                        for (var j = 0; j < nrOfBlocks; j++) {
+                    for (let i = 0; i < 2; i++) {
+                        for (let j = 0; j < nrOfBlocks; j++) {
                             if (hiddenBlocks[j] === lockedCards[i]) {
-                                var box = document.getElementById(lockedBlocks[i]);
+                                let box = temp[lockedBlocks[i]];
 
                                 box.style.backgroundImage = 'none';
                                 box.innerHTML = '?';
-                                box.onclick = function () {
-                                    displayHidden(this.id);
-                                };
+                                
+                                for (let i = 0; i < nrOfBlocks; i++) {
+                                    temp[i].onclick = function () {
+                                        displayHidden(i);
+                                    };
+                                }
                             }
                         }
                     }
                     toggleClickable();
-                }, 2000);
+                }, 1000);
             }
             counter = 0;
         }
@@ -90,11 +100,11 @@
 
 
 
-    function displayHidden(currId) {  // jshint ignore:line
-        var currBlock = document.getElementById(currId);
+    function displayHidden(currIndex) {  // jshint ignore:line
+        let currBlock = temp[currIndex]
 
         currBlock.innerHTML = "";
-        currBlock.style.backgroundImage = "url('img/"+hiddenBlocks[currId]+".jpg')";
+        currBlock.style.backgroundImage = "url('img/"+hiddenBlocks[currIndex]+".jpg')";
 
         currBlock.onclick = function () {
             window.alert('You have to choose another card');
@@ -102,16 +112,10 @@
 
         counter++;
         window.console.log('Click: ' + counter);
-        checkMatch(currId);
+        checkMatch(currIndex);
     }
+}
 
-
-
-    for (var i = 0; i < nrOfBlocks; i++) {
-        temp[i].setAttribute('id', i);
-        temp[i].onclick = function () {
-            displayHidden(this.id);
-        };
-        randomizeBlocks(i);
-    }
-}());
+export default {
+    run
+}

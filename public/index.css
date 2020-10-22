@@ -57,7 +57,7 @@ svg {
 }
 
 /* Below is the styling of the Memory window */
-#content {
+.content {
   position: absolute;
   margin: 0 auto;
 }
