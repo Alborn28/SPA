@@ -13,6 +13,12 @@ generateChat.addEventListener('click', event => {
     chatWindow.style.left = "30px"
     chatWindow.style.top = "30px"
 
+    let closeWindow = document.createElement("input")
+    closeWindow.className = "closeWindow"
+    closeWindow.type = "button"
+    closeWindow.value = "X"
+    chatWindow.appendChild(closeWindow)
+
     let chatMessage = document.createElement("input")
     chatMessage.id = "chatMessage"
     chatMessage.className = "chatMessage"
@@ -35,6 +41,6 @@ generateChat.addEventListener('click', event => {
     document.body.appendChild(chatWindow)
 
     chat.run(chatMessage, chatButton, chatMessages)
-    drag.run(chatWindow.id)
+    drag.run(chatWindow, closeWindow)
     counter += 1
 })

@@ -1,14 +1,17 @@
 let itemArea;
 
-function run (idOfWindow) {
+function run (windowDiv, closeWindow) {
   'use strict'
 
-  itemArea = document.getElementById(idOfWindow);
+  itemArea = windowDiv
   let droppableArea = document.getElementById("drop")
 
   function dragStartHandler(event) {
     itemArea = document.getElementById(event.target.id)
     let style = window.getComputedStyle(event.target, null)
+
+    document.body.removeChild(windowDiv)
+    document.body.appendChild(windowDiv)
 
     // Remember the original position
     event.dataTransfer.setData("text/plain",
@@ -51,6 +54,21 @@ function run (idOfWindow) {
       event.preventDefault()
   })
   droppableArea.addEventListener("drop", dropHandler)
+
+  closeWindow.addEventListener('click', event => {
+      let window = windowDiv
+      window.parentNode.removeChild(window) 
+  })
+
+  itemArea.addEventListener('click', event => {
+    try {
+      document.body.removeChild(windowDiv)
+      document.body.appendChild(windowDiv)
+    } 
+    catch (error) {
+      console.log("Window closed")
+    }
+  })
 }
 
 export default {

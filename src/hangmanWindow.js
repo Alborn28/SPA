@@ -13,6 +13,12 @@ generateHangman.addEventListener('click', function () {
     hangmanWindow.style.left = "30px"
     hangmanWindow.style.top = "30px"
 
+    let closeWindow = document.createElement("input")
+    closeWindow.className = "closeWindow"
+    closeWindow.type = "button"
+    closeWindow.value = "X"
+    hangmanWindow.appendChild(closeWindow)
+
     let hangmanWord = document.createElement("div")
     hangmanWord.className = "hangmanWord"
 
@@ -63,6 +69,6 @@ generateHangman.addEventListener('click', function () {
     document.body.appendChild(hangmanWindow)
 
     hangman.run(button, restartButton, wordToGuess, wrongGuessesP, wonOrLostP, character)
-    drag.run(hangmanWindow.id)
+    drag.run(hangmanWindow, closeWindow)
     counter += 1
 })

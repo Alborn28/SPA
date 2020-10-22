@@ -13,6 +13,12 @@ generateMemory.addEventListener('click', event => {
     memoryWindow.style.left = "30px"
     memoryWindow.style.top = "30px"
 
+    let closeWindow = document.createElement("input")
+    closeWindow.className = "closeWindow"
+    closeWindow.type = "button"
+    closeWindow.value = "X"
+    memoryWindow.appendChild(closeWindow)
+
     let memoryHeader = document.createElement("h1")
     memoryHeader.innerHTML = "Memory"
     memoryWindow.appendChild(memoryHeader)
@@ -38,11 +44,17 @@ generateMemory.addEventListener('click', event => {
         table.appendChild(tableRow)
     }
     content.appendChild(table)
+
+    let restart = document.createElement("input")
+    restart.type = "button"
+    restart.value = "Restart"
+    restart.hidden = "true"
+    content.appendChild(restart)
     memoryWindow.appendChild(content)
 
     document.body.appendChild(memoryWindow)
 
-    memory.run(td)
-    drag.run(memoryWindow.id)
+    memory.run(td, memoryParagraf, restart)
+    drag.run(memoryWindow, closeWindow)
     counter += 1
 })

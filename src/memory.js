@@ -1,6 +1,6 @@
-function run(td) {
+function run(td, paragraf, restart) {
     'use strict';
-
+    let correctGuessses = 0
     let nrOfBlocks = 10;
     let hiddenBlocks = new Array(10);
     let lockedBlocks = new Array(2);
@@ -69,6 +69,11 @@ function run(td) {
 
             if (lockedCards[0] === lockedCards[1]) {
                 window.console.log('yeey a match!');
+
+                correctGuessses++
+                if(correctGuessses === nrOfBlocks / 2) {
+                    won()
+                }
             } else {
                 window.console.log('sorry...no match');
                 window.console.log('flipping back in 3 secs');
@@ -92,7 +97,7 @@ function run(td) {
                         }
                     }
                     toggleClickable();
-                }, 1000);
+                }, 100);
             }
             counter = 0;
         }
@@ -114,6 +119,27 @@ function run(td) {
         window.console.log('Click: ' + counter);
         checkMatch(currIndex);
     }
+
+    function won() {
+        for(let i = 0; i < nrOfBlocks; i++) {
+            temp[i].hidden = true
+        }
+        paragraf.innerHTML = "You won!"
+        restart.hidden = false
+    }
+
+    restart.addEventListener('click', event => {
+        console.log("Restart clicked")
+        paragraf.innerHTML = "Find all pairs!"
+        for(let i = 0; i < nrOfBlocks; i++) {
+            temp[i].hidden = false
+            temp[i].style.backgroundImage = 'none'
+            temp[i].innerHTML = '?'
+        }
+
+        restart.hidden = true
+        run(temp, paragraf, restart)
+    })
 }
 
 export default {
