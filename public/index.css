@@ -1,3 +1,7 @@
+html {
+  overflow: hidden;
+}
+
 .window {
   text-align: center;
   position: absolute;

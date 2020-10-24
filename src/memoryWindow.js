@@ -52,10 +52,27 @@ generateMemory.addEventListener('click', event => {
     content.appendChild(restart)
     memoryWindow.appendChild(content)
 
-    drag.run(memoryWindow, closeWindow)
-    document.body.appendChild(memoryWindow)
+    let table = document.createElement("table")
 
+    drag.run(memoryWindow, closeWindow)
     
+    function generateTable(rows, columns, content) {
+        let td = []
+        
+        for(let i = 0; i < rows; i++) {
+            let tableRow = document.createElement("tr")
+            for(let j = 0; j < columns; j++) {
+                let tableCol = document.createElement("td")
+                tableCol.innerHTML = "?"
+                tableRow.appendChild(tableCol)
+                td.push(tableCol)
+            }
+            table.appendChild(tableRow)
+        }
+        content.appendChild(table)
+        return td
+    }
+
     size4.addEventListener("click", event => {
         size4.remove()
         size8.remove()
@@ -63,8 +80,8 @@ generateMemory.addEventListener('click', event => {
 
         let td = generateTable(2,2, content)
 
-        memory.run(td, memoryParagraf, restart, td.length)
-        counter += 1
+        memoryParagraf.innerHTML = "Find all pairs!"
+        memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
     })
 
     size8.addEventListener("click", event => {
@@ -74,8 +91,8 @@ generateMemory.addEventListener('click', event => {
 
         let td = generateTable(2,4, content)
 
-        memory.run(td, memoryParagraf, restart, td.length)
-        counter += 1
+        memoryParagraf.innerHTML = "Find all pairs!"
+        memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
     })
 
     size16.addEventListener("click", event => {
@@ -84,25 +101,10 @@ generateMemory.addEventListener('click', event => {
         size16.remove()
         let td = generateTable(4,4, content)
 
-        memory.run(td, memoryParagraf, restart, td.length)
-        counter += 1
+        memoryParagraf.innerHTML = "Find all pairs!"
+        memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
     })
-})
 
-function generateTable(rows, columns, content) {
-    let table = document.createElement("table")
-    let td = []
-    
-    for(let i = 0; i < rows; i++) {
-        let tableRow = document.createElement("tr")
-        for(let j = 0; j < columns; j++) {
-            let tableCol = document.createElement("td")
-            tableCol.innerHTML = "?"
-            tableRow.appendChild(tableCol)
-            td.push(tableCol)
-        }
-        table.appendChild(tableRow)
-    }
-    content.appendChild(table)
-    return td
-}
+    document.body.appendChild(memoryWindow)
+    counter += 1
+})

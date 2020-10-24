@@ -1,12 +1,17 @@
-function run(td, paragraf, restart, blocks) {
+function run(td, paragraf, restart, blocks, memoryWindow) {
     'use strict';
     let correctGuessses = 0
+    let incorrectGuesses = 0
     let nrOfBlocks = blocks;
     let hiddenBlocks = new Array(nrOfBlocks);
-    let lockedBlocks = new Array(2);
-    let lockedCards = new Array(2);
+    let chosenBlocks = [];
     let temp = td
     let counter= 0;
+    let blockInFocus = -1;
+    let firstBlock;
+    let secondBlock;
+
+    document.addEventListener('keydown', keyDownHandler);
 
     for (let i = 0; i < nrOfBlocks; i++) {
         temp[i].onclick = function () {
@@ -61,13 +66,13 @@ function run(td, paragraf, restart, blocks) {
 
     function checkMatch(currIndex) {
         if (counter === 1) {
-            lockedCards[0] = hiddenBlocks[currIndex];
-            lockedBlocks[0] = currIndex;
+            firstBlock = hiddenBlocks[currIndex]
+            chosenBlocks.push(currIndex)
         } else if (counter === 2) {
-            lockedCards[1] = hiddenBlocks[currIndex];
-            lockedBlocks[1] = currIndex;
+            secondBlock = hiddenBlocks[currIndex]
+            chosenBlocks.push(currIndex)
 
-            if (lockedCards[0] === lockedCards[1]) {
+            if (firstBlock == secondBlock) {
                 window.console.log('yeey a match!');
 
                 correctGuessses++
@@ -76,28 +81,33 @@ function run(td, paragraf, restart, blocks) {
                 }
             } else {
                 window.console.log('sorry...no match');
-                window.console.log('flipping back in 3 secs');
+                window.console.log('flipping back in 2 secs');
+
+                chosenBlocks.pop()
+                chosenBlocks.pop()
+                incorrectGuesses++
                 toggleClickable();
 
                 window.setTimeout(function () {
-                    for (let i = 0; i < 2; i++) {
-                        for (let j = 0; j < nrOfBlocks; j++) {
-                            if (hiddenBlocks[j] === lockedCards[i]) {
-                                let box = temp[lockedBlocks[i]];
-
-                                box.style.backgroundImage = 'none';
-                                box.innerHTML = '?';
-                                
-                                for (let i = 0; i < nrOfBlocks; i++) {
-                                    temp[i].onclick = function () {
-                                        displayHidden(i);
-                                    };
-                                }
+                    let found;
+                    for (let i = 0; i < nrOfBlocks; i++) {
+                        found = false
+                        for (let j = 0; j < chosenBlocks.length; j++) {
+                            if(chosenBlocks[j] == i) {
+                                found = true
+                                break
+                            }
+                        }
+                        if(found === false) {
+                            temp[i].style.backgroundImage = 'none'
+                            temp[i].innerHTML = '?'
+                            temp[i].onclick = function() {
+                                displayHidden(i)
                             }
                         }
                     }
                     toggleClickable();
-                }, 100);
+                }, 2000);
             }
             counter = 0;
         }
@@ -124,7 +134,7 @@ function run(td, paragraf, restart, blocks) {
         for(let i = 0; i < nrOfBlocks; i++) {
             temp[i].hidden = true
         }
-        paragraf.innerHTML = "You won!"
+        paragraf.innerHTML = "You won!<br><br>Incorrect guesses: " + incorrectGuesses.toString()
         restart.hidden = false
     }
 
@@ -136,9 +146,129 @@ function run(td, paragraf, restart, blocks) {
             temp[i].innerHTML = '?'
         }
 
+        temp[blockInFocus].style.border = "1px solid black"
+        blockInFocus = -1
+        
         restart.hidden = true
         run(temp, paragraf, restart, nrOfBlocks)
     })
+
+    function keyDownHandler(event) {
+        if(document.body.lastChild == memoryWindow) {
+            if(blockInFocus != -1) {
+            temp[blockInFocus].style.border = "1px solid black"
+        }
+
+        if(event.keyCode == 39) {
+            console.log("Right is pressed")
+            if(blockInFocus === -1) {
+                blockInFocus = 0
+            }
+
+            else {
+                if(nrOfBlocks > 4) {
+                    if(blockInFocus % 4 === 3)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus++
+                }
+
+                else {
+                    if(blockInFocus % 2 === 1)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus++
+                }
+            }
+        }
+
+        else if(event.keyCode == 37) {
+            console.log("Left is pressed")
+            if(blockInFocus === -1) {
+                blockInFocus = 0
+            }
+
+            else {
+                if(nrOfBlocks > 4) {
+                    if(blockInFocus % 4 === 0)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus--
+                }
+
+                else {
+                    if(blockInFocus % 2 === 0)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus--
+                }
+            }
+        }
+
+        else if(event.keyCode == 40) {
+            console.log("Down is pressed")
+            if(blockInFocus === -1) {
+                blockInFocus = 0
+            }
+
+            else {
+                if(nrOfBlocks === 16) {
+                    if(Math.floor(blockInFocus / 4) === 3)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus += 4
+                }
+
+                else if(nrOfBlocks === 8) {
+                    if(Math.floor(blockInFocus / 4) === 1)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus += 4
+                }
+
+                else {
+                    if(Math.floor(blockInFocus / 2) === 1)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus += 2
+                }
+            }
+        }
+
+        else if(event.keyCode == 38) {
+            console.log("Up is pressed")
+            if(blockInFocus === -1) {
+                blockInFocus = 0
+            }
+
+            else {
+                if(nrOfBlocks > 4) {
+                    if(Math.floor(blockInFocus / 4) === 0)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus -= 4
+                }
+
+                else {
+                    if(Math.floor(blockInFocus / 2) === 0)
+                        blockInFocus = blockInFocus
+                    else
+                        blockInFocus -= 2
+                }
+            }
+        }
+
+        else if(event.keyCode === 13) {
+            if(blockInFocus != -1) {
+                if(temp[blockInFocus].style.pointerEvents == '')
+                    temp[blockInFocus].click()
+            }
+        }
+
+        if(blockInFocus != -1)
+            temp[blockInFocus].style.border = "2px solid orange"
+        }
+    }
 }
 
 export default {
