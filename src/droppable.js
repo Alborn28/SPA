@@ -62,8 +62,10 @@ function run (windowDiv, closeWindow) {
 
   itemArea.addEventListener('click', event => {
     try {
-      document.body.removeChild(windowDiv)
-      document.body.appendChild(windowDiv)
+      if(document.body.lastChild != windowDiv) {
+        document.body.removeChild(windowDiv)
+        document.body.appendChild(windowDiv)
+      }
     } 
     catch (error) {
       console.log("Window closed")

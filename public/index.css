@@ -95,6 +95,6 @@ table td:hover {
 /* Below is the styling of the chat window */
 
 .chatMessages {
-  height: 96%;
+  height: 93%;
   overflow: auto;
 }

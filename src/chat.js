@@ -1,6 +1,6 @@
 let localStorage = window.localStorage;
 
-function run(chatMessage, chatButton, chatMessages) {
+function run(chatMessage, chatButton, chatMessages, clearMessages) {
     if(localStorage.getItem("username") === null) {
         chatMessage.placeholder = "Please choose a username"
     }
@@ -47,6 +47,10 @@ function run(chatMessage, chatButton, chatMessages) {
         }
         chatMessage.value = ''
 
+    })
+
+    clearMessages.addEventListener("click", event => {
+        chatMessages.innerHTML = ""
     })
 }
 
