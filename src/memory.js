@@ -1,8 +1,8 @@
-function run(td, paragraf, restart) {
+function run(td, paragraf, restart, blocks) {
     'use strict';
     let correctGuessses = 0
-    let nrOfBlocks = 10;
-    let hiddenBlocks = new Array(10);
+    let nrOfBlocks = blocks;
+    let hiddenBlocks = new Array(nrOfBlocks);
     let lockedBlocks = new Array(2);
     let lockedCards = new Array(2);
     let temp = td
@@ -35,10 +35,10 @@ function run(td, paragraf, restart) {
 
 
     function randomizeBlocks(currPos) {
-        let randNr = Math.floor((Math.random() * 5) +1);
+        let randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) +1);
 
         while (checkForDuplicates(randNr)) {
-            randNr = Math.floor((Math.random() * 5) +1);
+            randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) +1);
         }
         hiddenBlocks[currPos] = randNr;
     }
@@ -109,7 +109,7 @@ function run(td, paragraf, restart) {
         let currBlock = temp[currIndex]
 
         currBlock.innerHTML = "";
-        currBlock.style.backgroundImage = "url('img/"+hiddenBlocks[currIndex]+".jpg')";
+        currBlock.style.backgroundImage = "url('img/"+hiddenBlocks[currIndex]+".png')";
 
         currBlock.onclick = function () {
             window.alert('You have to choose another card');
@@ -129,7 +129,6 @@ function run(td, paragraf, restart) {
     }
 
     restart.addEventListener('click', event => {
-        console.log("Restart clicked")
         paragraf.innerHTML = "Find all pairs!"
         for(let i = 0; i < nrOfBlocks; i++) {
             temp[i].hidden = false
@@ -138,7 +137,7 @@ function run(td, paragraf, restart) {
         }
 
         restart.hidden = true
-        run(temp, paragraf, restart)
+        run(temp, paragraf, restart, nrOfBlocks)
     })
 }
 
