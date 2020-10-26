@@ -1,4 +1,4 @@
-import hangman from '/_dist_/hangman.js'
+import hangmanGame from '/_dist_/hangman.js'
 import drag from '/_dist_/droppable.js'
 
 let generateHangman = document.getElementById("generateHangman")
@@ -12,6 +12,8 @@ generateHangman.addEventListener('click', function () {
 
     hangmanWindow.style.left = "30px"
     hangmanWindow.style.top = "30px"
+
+    //hangmanWindow.innerHTML += document.getElementById("hangman").innerHTML
 
     let closeWindow = document.createElement("input")
     closeWindow.className = "closeWindow"
@@ -66,9 +68,25 @@ generateHangman.addEventListener('click', function () {
     restart.appendChild(restartButton)
     hangmanWindow.appendChild(restart)
 
+    let divsvg = document.createElement("div")
+    divsvg.innerHTML = document.getElementById("hangman").innerHTML
+
+    hangmanWindow.appendChild(divsvg)
+
+    let components = hangmanWindow.getElementsByTagName("g")
+    components[0].id = components[0].id + counter
+    components[9].id = components[9].id + counter
+    components[13].id = components[13].id + counter
+    components[14].id = components[14].id + counter
+    components[16].id = components[16].id + counter
+    components[18].id = components[18].id + counter
+    components[20].id = components[20].id + counter
+    components[22].id = components[22].id + counter
+    components[23].id = components[23].id + counter
+
     document.body.appendChild(hangmanWindow)
 
-    hangman.run(button, restartButton, wordToGuess, wrongGuessesP, wonOrLostP, character)
+    hangmanGame.run(button, restartButton, wordToGuess, wrongGuessesP, wonOrLostP, character)
     drag.run(hangmanWindow, closeWindow)
     counter += 1
 })

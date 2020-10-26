@@ -4,9 +4,9 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
     let incorrectGuesses = 0
     let nrOfBlocks = blocks;
     let hiddenBlocks = new Array(nrOfBlocks);
-    let chosenBlocks = [];
+    let indexOfCorrectMatches = [];
     let temp = td
-    let counter= 0;
+    let counter = 0;
     let blockInFocus = -1;
     let firstBlock;
     let secondBlock;
@@ -40,10 +40,10 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
 
 
     function randomizeBlocks(currPos) {
-        let randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) +1);
+        let randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) + 1);
 
         while (checkForDuplicates(randNr)) {
-            randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) +1);
+            randNr = Math.floor((Math.random() * (nrOfBlocks / 2)) + 1);
         }
         hiddenBlocks[currPos] = randNr;
     }
@@ -67,24 +67,24 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
     function checkMatch(currIndex) {
         if (counter === 1) {
             firstBlock = hiddenBlocks[currIndex]
-            chosenBlocks.push(currIndex)
+            indexOfCorrectMatches.push(currIndex)
         } else if (counter === 2) {
             secondBlock = hiddenBlocks[currIndex]
-            chosenBlocks.push(currIndex)
+            indexOfCorrectMatches.push(currIndex)
 
             if (firstBlock == secondBlock) {
                 window.console.log('yeey a match!');
 
                 correctGuessses++
-                if(correctGuessses === nrOfBlocks / 2) {
+                if (correctGuessses === nrOfBlocks / 2) {
                     won()
                 }
             } else {
                 window.console.log('sorry...no match');
                 window.console.log('flipping back in 2 secs');
 
-                chosenBlocks.pop()
-                chosenBlocks.pop()
+                indexOfCorrectMatches.pop()
+                indexOfCorrectMatches.pop()
                 incorrectGuesses++
                 toggleClickable();
 
@@ -92,16 +92,16 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
                     let found;
                     for (let i = 0; i < nrOfBlocks; i++) {
                         found = false
-                        for (let j = 0; j < chosenBlocks.length; j++) {
-                            if(chosenBlocks[j] == i) {
+                        for (let j = 0; j < indexOfCorrectMatches.length; j++) {
+                            if (indexOfCorrectMatches[j] == i) {
                                 found = true
                                 break
                             }
                         }
-                        if(found === false) {
+                        if (found === false) {
                             temp[i].style.backgroundImage = 'none'
                             temp[i].innerHTML = '?'
-                            temp[i].onclick = function() {
+                            temp[i].onclick = function () {
                                 displayHidden(i)
                             }
                         }
@@ -119,7 +119,8 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
         let currBlock = temp[currIndex]
 
         currBlock.innerHTML = "";
-        currBlock.style.backgroundImage = "url('img/"+hiddenBlocks[currIndex]+".png')";
+        currBlock.style.backgroundImage = "url('img/" + hiddenBlocks[currIndex] + ".png')";
+        currBlock.style.backgroundSize = "contain"
 
         currBlock.onclick = function () {
             window.alert('You have to choose another card');
@@ -131,7 +132,7 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
     }
 
     function won() {
-        for(let i = 0; i < nrOfBlocks; i++) {
+        for (let i = 0; i < nrOfBlocks; i++) {
             temp[i].hidden = true
         }
         paragraf.innerHTML = "You won!<br><br>Incorrect guesses: " + incorrectGuesses.toString()
@@ -140,133 +141,135 @@ function run(td, paragraf, restart, blocks, memoryWindow) {
 
     restart.addEventListener('click', event => {
         paragraf.innerHTML = "Find all pairs!"
-        for(let i = 0; i < nrOfBlocks; i++) {
+        for (let i = 0; i < nrOfBlocks; i++) {
             temp[i].hidden = false
             temp[i].style.backgroundImage = 'none'
             temp[i].innerHTML = '?'
         }
 
-        temp[blockInFocus].style.border = "1px solid black"
-        blockInFocus = -1
-        
+        if(blockInFocus != -1) {
+            temp[blockInFocus].style.border = "1px solid black"
+            blockInFocus = -1
+        }
+
         restart.hidden = true
         run(temp, paragraf, restart, nrOfBlocks)
     })
 
     function keyDownHandler(event) {
-        if(document.body.lastChild == memoryWindow) {
-            if(blockInFocus != -1) {
-            temp[blockInFocus].style.border = "1px solid black"
-        }
-
-        if(event.keyCode == 39) {
-            console.log("Right is pressed")
-            if(blockInFocus === -1) {
-                blockInFocus = 0
+        if (document.body.lastChild == memoryWindow) {
+            if (blockInFocus != -1) {
+                temp[blockInFocus].style.border = "1px solid black"
             }
 
-            else {
-                if(nrOfBlocks > 4) {
-                    if(blockInFocus % 4 === 3)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus++
+            if (event.keyCode == 39) {
+                console.log("Right is pressed")
+                if (blockInFocus === -1) {
+                    blockInFocus = 0
                 }
 
                 else {
-                    if(blockInFocus % 2 === 1)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus++
+                    if (nrOfBlocks > 4) {
+                        if (blockInFocus % 4 === 3)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus++
+                    }
+
+                    else {
+                        if (blockInFocus % 2 === 1)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus++
+                    }
                 }
             }
-        }
 
-        else if(event.keyCode == 37) {
-            console.log("Left is pressed")
-            if(blockInFocus === -1) {
-                blockInFocus = 0
-            }
-
-            else {
-                if(nrOfBlocks > 4) {
-                    if(blockInFocus % 4 === 0)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus--
-                }
-
-                else {
-                    if(blockInFocus % 2 === 0)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus--
-                }
-            }
-        }
-
-        else if(event.keyCode == 40) {
-            console.log("Down is pressed")
-            if(blockInFocus === -1) {
-                blockInFocus = 0
-            }
-
-            else {
-                if(nrOfBlocks === 16) {
-                    if(Math.floor(blockInFocus / 4) === 3)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus += 4
-                }
-
-                else if(nrOfBlocks === 8) {
-                    if(Math.floor(blockInFocus / 4) === 1)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus += 4
+            else if (event.keyCode == 37) {
+                console.log("Left is pressed")
+                if (blockInFocus === -1) {
+                    blockInFocus = 0
                 }
 
                 else {
-                    if(Math.floor(blockInFocus / 2) === 1)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus += 2
+                    if (nrOfBlocks > 4) {
+                        if (blockInFocus % 4 === 0)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus--
+                    }
+
+                    else {
+                        if (blockInFocus % 2 === 0)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus--
+                    }
                 }
             }
-        }
 
-        else if(event.keyCode == 38) {
-            console.log("Up is pressed")
-            if(blockInFocus === -1) {
-                blockInFocus = 0
-            }
-
-            else {
-                if(nrOfBlocks > 4) {
-                    if(Math.floor(blockInFocus / 4) === 0)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus -= 4
+            else if (event.keyCode == 40) {
+                console.log("Down is pressed")
+                if (blockInFocus === -1) {
+                    blockInFocus = 0
                 }
 
                 else {
-                    if(Math.floor(blockInFocus / 2) === 0)
-                        blockInFocus = blockInFocus
-                    else
-                        blockInFocus -= 2
+                    if (nrOfBlocks === 16) {
+                        if (Math.floor(blockInFocus / 4) === 3)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus += 4
+                    }
+
+                    else if (nrOfBlocks === 8) {
+                        if (Math.floor(blockInFocus / 4) === 1)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus += 4
+                    }
+
+                    else {
+                        if (Math.floor(blockInFocus / 2) === 1)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus += 2
+                    }
                 }
             }
-        }
 
-        else if(event.keyCode === 13) {
-            if(blockInFocus != -1) {
-                if(temp[blockInFocus].style.pointerEvents == '')
-                    temp[blockInFocus].click()
+            else if (event.keyCode == 38) {
+                console.log("Up is pressed")
+                if (blockInFocus === -1) {
+                    blockInFocus = 0
+                }
+
+                else {
+                    if (nrOfBlocks > 4) {
+                        if (Math.floor(blockInFocus / 4) === 0)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus -= 4
+                    }
+
+                    else {
+                        if (Math.floor(blockInFocus / 2) === 0)
+                            blockInFocus = blockInFocus
+                        else
+                            blockInFocus -= 2
+                    }
+                }
             }
-        }
 
-        if(blockInFocus != -1)
-            temp[blockInFocus].style.border = "2px solid orange"
+            else if (event.keyCode === 13) {
+                if (blockInFocus != -1) {
+                    if (temp[blockInFocus].style.pointerEvents == '')
+                        temp[blockInFocus].click()
+                }
+            }
+
+            if (blockInFocus != -1)
+                temp[blockInFocus].style.border = "2px solid orange"
         }
     }
 }
