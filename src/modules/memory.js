@@ -12,17 +12,17 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
   let correctGuessses = 0
   let incorrectGuesses = 0
   let counter = 0
-  let blockInFocus = -1
-  let firstBlock
-  let secondBlock
+  let blockInFocus = -1 // Stores the index of the table cell in focus when playing with keyboard
+  let firstBlock // The table cell picked first
+  let secondBlock // The table cell picked second
   const nrOfBlocks = blocks
   const hiddenBlocks = new Array(nrOfBlocks)
-  const indexOfCorrectMatches = []
+  const indexOfCorrectMatches = [] // Store the indexes of the cells that have been correctly matched
   const temp = td
 
-  document.addEventListener('keydown', keyDownHandler)
+  document.addEventListener('keydown', keyDownHandler) // If the user presses a keyboard key
 
-  for (let i = 0; i < nrOfBlocks; i++) {
+  for (let i = 0; i < nrOfBlocks; i++) { // Randomize the contents of the table cells so each cell has one assigned image
     temp[i].onclick = function () {
       displayHidden(i)
     }
@@ -103,7 +103,7 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
         window.console.log('sorry...no match')
         window.console.log('flipping back in 2 secs')
 
-        indexOfCorrectMatches.pop()
+        indexOfCorrectMatches.pop() // Pop the last 2 added cells since it was not a match
         indexOfCorrectMatches.pop()
         incorrectGuesses++
         toggleClickable()
@@ -113,7 +113,7 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
           for (let i = 0; i < nrOfBlocks; i++) {
             found = false
             for (let j = 0; j < indexOfCorrectMatches.length; j++) {
-              if (indexOfCorrectMatches[j] === i) {
+              if (indexOfCorrectMatches[j] === i) { // Reset each of the cells to their original onclick-function except the ones that have been correctly matched
                 found = true
                 break
               }
@@ -150,7 +150,6 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
     }
 
     counter++
-    window.console.log('Click: ' + counter)
     checkMatch(currIndex)
   }
 
@@ -165,7 +164,7 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
     restart.hidden = false
   }
 
-  restart.addEventListener('click', function () {
+  restart.addEventListener('click', function () { // Restarts the game and sets everything back to how it was from the beginning
     paragraf.innerHTML = 'Find all pairs!'
     for (let i = 0; i < nrOfBlocks; i++) {
       temp[i].hidden = false
@@ -193,34 +192,31 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
         temp[blockInFocus].style.border = '1px solid black'
       }
 
-      if (event.keyCode === 39) {
-        console.log('Right is pressed')
-        if (blockInFocus === -1) {
+      if (event.keyCode === 39) { // If the right arrow key is pressed
+        if (blockInFocus === -1) { // If it's the first key press of the round, always start at top left
           blockInFocus = 0
         } else {
-          if (nrOfBlocks > 4) {
+          if (nrOfBlocks > 4) { // Make sure the user doesn't go outside of the table
             if (blockInFocus % 4 !== 3) { blockInFocus++ }
           } else {
             if (blockInFocus % 2 !== 1) { blockInFocus++ }
           }
         }
-      } else if (event.keyCode === 37) {
-        console.log('Left is pressed')
-        if (blockInFocus === -1) {
+      } else if (event.keyCode === 37) { // If the left arrow key is pressed
+        if (blockInFocus === -1) { // If it's the first key press of the round, always start at top left
           blockInFocus = 0
         } else {
-          if (nrOfBlocks > 4) {
+          if (nrOfBlocks > 4) { // Make sure the user doesn't go outside of the table
             if (blockInFocus % 4 !== 0) { blockInFocus-- }
           } else {
             if (blockInFocus % 2 !== 0) { blockInFocus-- }
           }
         }
-      } else if (event.keyCode === 40) {
-        console.log('Down is pressed')
-        if (blockInFocus === -1) {
+      } else if (event.keyCode === 40) { // If the down arrow key is pressed
+        if (blockInFocus === -1) { // If it's the first key press of the round, always start at top left
           blockInFocus = 0
         } else {
-          if (nrOfBlocks === 16) {
+          if (nrOfBlocks === 16) { // Make sure the user doesn't go outside of the table
             if (Math.floor(blockInFocus / 4) !== 3) { blockInFocus += 4 }
           } else if (nrOfBlocks === 8) {
             if (Math.floor(blockInFocus / 4) !== 1) { blockInFocus += 4 }
@@ -228,24 +224,23 @@ function run (td, paragraf, restart, blocks, memoryWindow) {
             if (Math.floor(blockInFocus / 2) !== 1) { blockInFocus += 2 }
           }
         }
-      } else if (event.keyCode === 38) {
-        console.log('Up is pressed')
-        if (blockInFocus === -1) {
+      } else if (event.keyCode === 38) { // If the up arrow key is pressed
+        if (blockInFocus === -1) { // If it's the first key press of the round, always start at top left
           blockInFocus = 0
         } else {
-          if (nrOfBlocks > 4) {
+          if (nrOfBlocks > 4) { // Make sure the user doesn't go outside of the table
             if (Math.floor(blockInFocus / 4) !== 0) { blockInFocus -= 4 }
           } else {
             if (Math.floor(blockInFocus / 2) !== 0) { blockInFocus -= 2 }
           }
         }
-      } else if (event.keyCode === 13) {
+      } else if (event.keyCode === 13) { // If the enter key is pressed
         if (blockInFocus !== -1) {
-          if (temp[blockInFocus].style.pointerEvents === '') { temp[blockInFocus].click() }
+          if (temp[blockInFocus].style.pointerEvents === '') { temp[blockInFocus].click() } // Trigger the onclick event on the table cell in focus
         }
       }
 
-      if (blockInFocus !== -1) { temp[blockInFocus].style.border = '2px solid orange' }
+      if (blockInFocus !== -1) { temp[blockInFocus].style.border = '2px solid orange' } // Set a border to show which table cell is in focus
     }
   }
 }

@@ -1,10 +1,10 @@
-import hangmanGame from './hangman.js'
-import drag from './droppable.js'
+import hangmanGame from './modules/hangman.js'
+import drag from './modules/droppable.js'
 
 const generateHangman = document.getElementById('generateHangman')
-let counter = 1
+let counter = 1 // A counter used to give unique id:s to the windows
 
-generateHangman.addEventListener('click', function () {
+generateHangman.addEventListener('click', function () { // If the user clicks the hangman icon, generate a div with all the contents
   const hangmanWindow = document.createElement('div')
   hangmanWindow.className = 'window'
   hangmanWindow.id = 'hangman' + counter.toString()
@@ -71,6 +71,7 @@ generateHangman.addEventListener('click', function () {
 
   hangmanWindow.appendChild(divsvg)
 
+  // Give unique id's to all the components in the svg image. Not a pretty solution, but it does the trick
   const components = hangmanWindow.getElementsByTagName('g')
   components[0].id = components[0].id + counter
   components[9].id = components[9].id + counter
@@ -84,7 +85,7 @@ generateHangman.addEventListener('click', function () {
 
   document.body.appendChild(hangmanWindow)
 
-  hangmanGame.run(button, restartButton, wordToGuess, wrongGuessesP, wonOrLostP, character)
-  drag.run(hangmanWindow, closeWindow)
-  counter += 1
+  hangmanGame.run(button, restartButton, wordToGuess, wrongGuessesP, wonOrLostP, character) // Run the application
+  drag.run(hangmanWindow, closeWindow) // Send the window to droppable.js which handles the dragging of windows
+  counter += 1 // Update the id counter
 })

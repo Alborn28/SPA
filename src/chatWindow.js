@@ -1,10 +1,10 @@
-import chat from './chat.js'
-import drag from './droppable.js'
+import chat from './modules/chat.js'
+import drag from './modules/droppable.js'
 
 const generateChat = document.getElementById('generateChat')
-let counter = 1
+let counter = 1 // A counter used to give unique id:s to the windows
 
-generateChat.addEventListener('click', event => {
+generateChat.addEventListener('click', event => { // If the user clicks the chat icon, generate a div with all the contents
   const chatWindow = document.createElement('div')
   chatWindow.className = 'window'
   chatWindow.id = 'chat' + counter.toString()
@@ -42,7 +42,7 @@ generateChat.addEventListener('click', event => {
 
   document.body.appendChild(chatWindow)
 
-  chat.run(chatMessage, chatButton, chatMessages, clearMessages)
-  drag.run(chatWindow, closeWindow)
-  counter += 1
+  chat.run(chatMessage, chatButton, chatMessages, clearMessages) // Start the application
+  drag.run(chatWindow, closeWindow) // Send the window to droppable.js which handles the dragging of windows
+  counter += 1 // Update the id counter
 })

@@ -30,9 +30,6 @@ function run (windowDiv, closeWindow) {
     )
 
     event.dataTransfer.dropEffect = 'move'
-
-    console.log('DRAG START')
-    console.log(event)
   }
 
   /**
@@ -46,8 +43,6 @@ function run (windowDiv, closeWindow) {
     itemArea.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px'
     itemArea.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px'
 
-    console.log('DROP')
-    console.log(event)
     event.preventDefault()
   }
 
@@ -61,12 +56,12 @@ function run (windowDiv, closeWindow) {
   })
   droppableArea.addEventListener('drop', dropHandler)
 
-  closeWindow.addEventListener('click', event => {
+  closeWindow.addEventListener('click', event => { // If the X button is clicked, close the window
     const window = windowDiv
     window.parentNode.removeChild(window)
   })
 
-  itemArea.addEventListener('click', event => {
+  itemArea.addEventListener('click', event => { // If a window is clicked, make sure that window is in focus and on top of the other windows
     try {
       if (document.body.lastChild !== windowDiv) {
         document.body.removeChild(windowDiv)

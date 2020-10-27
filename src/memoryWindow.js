@@ -1,10 +1,10 @@
-import memory from './memory.js'
-import drag from './droppable.js'
+import memory from './modules/memory.js'
+import drag from './modules/droppable.js'
 
 const generateMemory = document.getElementById('generateMemory')
 let counter = 1
 
-generateMemory.addEventListener('click', event => {
+generateMemory.addEventListener('click', event => { // If the user clicks the memory icon, generate a div with all the contents
   const memoryWindow = document.createElement('div')
   memoryWindow.className = 'window'
   memoryWindow.id = 'memory' + counter.toString()
@@ -54,7 +54,7 @@ generateMemory.addEventListener('click', event => {
 
   const table = document.createElement('table')
 
-  drag.run(memoryWindow, closeWindow)
+  drag.run(memoryWindow, closeWindow) // Send the window to droppable.js which handles the dragging of windows
 
   /**
    * Function used to generate the memory game in the size that the user wants.
@@ -89,7 +89,7 @@ generateMemory.addEventListener('click', event => {
     const td = generateTable(2, 2, content)
 
     memoryParagraf.innerHTML = 'Find all pairs!'
-    memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
+    memory.run(td, memoryParagraf, restart, td.length, memoryWindow) // Start the application
   })
 
   size8.addEventListener('click', event => {
@@ -100,7 +100,7 @@ generateMemory.addEventListener('click', event => {
     const td = generateTable(2, 4, content)
 
     memoryParagraf.innerHTML = 'Find all pairs!'
-    memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
+    memory.run(td, memoryParagraf, restart, td.length, memoryWindow) // Start the application
   })
 
   size16.addEventListener('click', event => {
@@ -110,9 +110,9 @@ generateMemory.addEventListener('click', event => {
     const td = generateTable(4, 4, content)
 
     memoryParagraf.innerHTML = 'Find all pairs!'
-    memory.run(td, memoryParagraf, restart, td.length, memoryWindow)
+    memory.run(td, memoryParagraf, restart, td.length, memoryWindow) // Start the application
   })
 
   document.body.appendChild(memoryWindow)
-  counter += 1
+  counter += 1 // Update the id counter
 })

@@ -13,21 +13,13 @@ function run (chatMessage, chatButton, chatMessages, clearMessages) {
     chatMessage.placeholder = 'Please choose a username'
   }
 
-  console.log('Connecting to: ' + 'ws://vhost3.lnu.se:20080/socket/')
   const websocket = new WebSocket('ws://vhost3.lnu.se:20080/socket/')
-
-  websocket.onopen = function () {
-    console.log('The websocket is now open.')
-    console.log(websocket)
-  }
 
   websocket.onmessage = function (event) {
     const sender = JSON.parse(event.data).username
     const message = JSON.parse(event.data).data
 
-    console.log('Receiving message from: ' + sender)
-    console.log('The message: ' + message)
-    if (sender !== 'The Server') {
+    if (sender !== 'The Server') { // Show all received messages except the heartbeat messages
       const paragraf = document.createElement('p')
       paragraf.appendChild(document.createTextNode(sender + ': ' + message))
       chatMessages.appendChild(paragraf)
@@ -35,12 +27,12 @@ function run (chatMessage, chatButton, chatMessages, clearMessages) {
   }
 
   chatButton.addEventListener('click', event => {
-    if (localStorage.getItem('username') === null) {
+    if (localStorage.getItem('username') === null) { // Check if a username is set, otherwise set it
       if (chatMessage.value !== '') {
         localStorage.setItem('username', chatMessage.value)
         chatMessage.placeholder = 'Write your message'
       }
-    } else {
+    } else { // Create the message and send it
       const data = {
         type: 'message',
         data: chatMessage.value,
@@ -49,7 +41,6 @@ function run (chatMessage, chatButton, chatMessages, clearMessages) {
       }
 
       websocket.send(JSON.stringify(data))
-      console.log('Sending message: ' + chatMessage.value)
     }
     chatMessage.value = ''
   })

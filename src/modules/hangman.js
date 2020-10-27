@@ -1,13 +1,13 @@
 import hangmansvg from './hangmansvg.js'
 
-let idCounter = 1 // A counter to which allows to find the
+let idCounter = 1 // A counter to which allows to find the unique id:s of the components
 
 /**
  * A function that handles the functionality of the hangman game.
  *
  * @param {HTMLInputElement} button a button used by the user to submit their guess.
  * @param {HTMLInputElement} restartButton a button used to restart the game when the user has won or lost.
- * @param {HTMLParagraphElement} wordToGuess a paragraph where the word is displayed, at the start it only consists of underscores.
+ * @param {HTMLParagraphElement} wordToGuess a paragraph where the word is displayed
  * @param {HTMLParagraphElement} wrongGuesses a paragraph where the incorrect guesses are displayed.
  * @param {HTMLParagraphElement} wonOrLost a paragraph where a message is displayed after the game is over.
  * @param {HTMLInputElement} enteredCharacter an input field where the user writes their guess
@@ -31,14 +31,14 @@ function run (button, restartButton, wordToGuess, wrongGuesses, wonOrLost, enter
   button.addEventListener('click', function () {
     // Run until you have either won or lost
     if (mistakes < 9 && correctGuesses < correctWord.length) {
-      var char = enteredCharacter.value
+      var char = enteredCharacter.value // Store the user's guess
       enteredCharacter.value = ''
 
       if (char.length === 1) {
         const indexOfChar = getCharacterIndexes(char) // Get the indexes where the character occurs in the word, if any
         checkGuess(char, indexOfChar) // Check if the character that the user guessed was correct or not
 
-        // If 9 mistakes are made, the user has won
+        // If 9 mistakes are made, the user has lost
         if (mistakes === 9) {
           lost()
         }
@@ -56,7 +56,7 @@ function run (button, restartButton, wordToGuess, wrongGuesses, wonOrLost, enter
   })
 
   /**
-   * Functions is used to prepare the game for playing. For example hides the hangman svg, randomizes the word to be guessed and displays underscores.
+   * A function that is used to prepare the game for playing. For example hides the hangman svg, randomizes the word to be guessed and displays underscores.
    */
   function setUp () {
     for (let i = 0; i < 9; i += 1) {
