@@ -121,3 +121,12 @@ table td:hover {
   overflow: auto;
 }
 
+.emojilist {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  height: 200px;
+  overflow-y: overlay;
+  overflow-x: hidden;
+}

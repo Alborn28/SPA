@@ -3,10 +3,12 @@ const localStorage = window.localStorage
 /**
  * A function where the whole functionality of the chat application is run. handles connecting to the server as well as sending and receiving messages.
  *
- * @param {HTMLInputElement} chatMessage Input field where the user writes their message
- * @param {HTMLInputElement} chatButton Button to send the user's message to the server
- * @param {HTMLDivElement} chatMessages A div where all received messages are displayed
- * @param {HTMLInputElement} clearMessages A button to clear the messages
+ * @param {HTMLInputElement} chatMessage input field where the user writes their message
+ * @param {HTMLInputElement} chatButton button to send the user's message to the server
+ * @param {HTMLDivElement} chatMessages a div where all received messages are displayed
+ * @param {HTMLInputElement} clearMessages a button to clear the messages
+ * @param {HTMLInputElement} closeWindow a button used for closing the window
+ * @param {HTMLInputElement} changeUsername a button used to clear the stored username
  */
 function run (chatMessage, chatButton, chatMessages, clearMessages, closeWindow, changeUsername) {
   if (localStorage.getItem('username') === null || localStorage.getItem('username') === '') { // If no username has been picked, ask for one
@@ -16,30 +18,34 @@ function run (chatMessage, chatButton, chatMessages, clearMessages, closeWindow,
 
   const websocket = new WebSocket('ws://vhost3.lnu.se:20080/socket/')
 
-  if(localStorage.getItem('messageLog') === null) { // Initiate local storage
+  if (localStorage.getItem('messageLog') === null) { // Initiate local storage
     localStorage.setItem('messageLog', JSON.stringify([]))
-  }
-  else { // Display the cached messages
-    let messageLog = JSON.parse(localStorage.getItem('messageLog'))
+  } else { // Display the cached messages
+    const messageLog = JSON.parse(localStorage.getItem('messageLog'))
     console.log(messageLog)
-    for(let i = 0; i < messageLog.length; i++) {
+    for (let i = 0; i < messageLog.length; i++) {
       const paragraf = document.createElement('p')
-      paragraf.appendChild(document.createTextNode(messageLog[i]))
+      paragraf.innerHTML = messageLog[i]
       chatMessages.appendChild(paragraf)
     }
   }
 
-
   websocket.onmessage = function (event) {
     const sender = JSON.parse(event.data).username
-    const message = JSON.parse(event.data).data
+    let message = JSON.parse(event.data).data
 
     if (sender !== 'The Server') { // Show all received messages except the heartbeat messages
+      const temp = message.split(' ')
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i] === ':like') { temp[i] = '👍' } else if (temp[i] === ':dislike') { temp[i] = '👎' } else if (temp[i] === ':)') { temp[i] = '😊' } else if (temp[i] === ':(') { temp[i] = '🙁' } else if (temp[i] === ':D') { temp[i] = '😄' } else if (temp[i] === ';(') { temp[i] = '😢' } else if (temp[i] === ':cool') { temp[i] = '😎' }
+      }
+
+      message = temp.join(' ')
       const paragraf = document.createElement('p')
-      paragraf.appendChild(document.createTextNode(sender + ': ' + message))
+      paragraf.innerHTML = sender + ': ' + message
       chatMessages.appendChild(paragraf)
 
-      let messageLog = JSON.parse(localStorage.getItem('messageLog')) // Cache the received message
+      const messageLog = JSON.parse(localStorage.getItem('messageLog')) // Cache the received message
       messageLog.push(sender + ': ' + message)
       console.log(messageLog)
       localStorage.setItem('messageLog', JSON.stringify(messageLog))
