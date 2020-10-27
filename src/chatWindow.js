@@ -11,7 +11,7 @@ generateChat.addEventListener('click', event => { // If the user clicks the chat
   chatWindow.draggable = 'true'
 
   chatWindow.style.left = '30px'
-  chatWindow.style.top = '30px'
+  chatWindow.style.top = '100px'
 
   const closeWindow = document.createElement('input')
   closeWindow.className = 'closeWindow'
@@ -40,9 +40,14 @@ generateChat.addEventListener('click', event => { // If the user clicks the chat
   clearMessages.value = 'Clear'
   chatWindow.appendChild(clearMessages)
 
+  const changeUsername = document.createElement('input')
+  changeUsername.type = 'button'
+  changeUsername.value = 'Change username'
+  chatWindow.appendChild(changeUsername)
+
   document.body.appendChild(chatWindow)
 
-  chat.run(chatMessage, chatButton, chatMessages, clearMessages) // Start the application
+  chat.run(chatMessage, chatButton, chatMessages, clearMessages, closeWindow, changeUsername) // Start the application
   drag.run(chatWindow, closeWindow) // Send the window to droppable.js which handles the dragging of windows
   counter += 1 // Update the id counter
 })

@@ -11,7 +11,7 @@ generateMemory.addEventListener('click', event => { // If the user clicks the me
   memoryWindow.draggable = 'true'
 
   memoryWindow.style.left = '30px'
-  memoryWindow.style.top = '30px'
+  memoryWindow.style.top = '100px'
 
   const closeWindow = document.createElement('input')
   closeWindow.className = 'closeWindow'

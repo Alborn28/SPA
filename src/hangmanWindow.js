@@ -11,7 +11,7 @@ generateHangman.addEventListener('click', function () { // If the user clicks th
   hangmanWindow.draggable = 'true'
 
   hangmanWindow.style.left = '30px'
-  hangmanWindow.style.top = '30px'
+  hangmanWindow.style.top = '100px'
 
   const closeWindow = document.createElement('input')
   closeWindow.className = 'closeWindow'
@@ -66,6 +66,7 @@ generateHangman.addEventListener('click', function () { // If the user clicks th
   restart.appendChild(restartButton)
   hangmanWindow.appendChild(restart)
 
+  //Add the svg image, copied from the hidden div in the html page
   const divsvg = document.createElement('div')
   divsvg.innerHTML = document.getElementById('hangman').innerHTML
 

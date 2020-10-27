@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html {
   overflow: hidden;
   background-image: url("./img/background.jpg");
@@ -16,10 +20,16 @@ html {
 
 .generateWindows {
   position: relative;
-  padding: 10px;
+  margin: 10px;
+  padding: 2px;
   height: 60px;
   width: 60px;
   background-size: contain;
+  border: 1px transparent black;
+}
+
+.generateWindows:hover {
+  border: solid black 1px;
 }
 
 .closeWindow {
@@ -82,13 +92,14 @@ svg {
 }
 
 table {
-  width: 300px;
+  margin: auto;
+  max-width: 300px;
   max-height: 400px;
 }
 
 table td {
   outline: 1px solid black;
-  width: 25%;
+  width: 100px;
   height: 100px;
   text-align: center;
   color: black;
