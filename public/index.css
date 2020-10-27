@@ -21,8 +21,8 @@ html {
   float: right;
   background: red;
   color: white;
-  top: 0px;
-  right: 0px;
+  top: 0.1px;
+  right: 0.1px;
 }
 
 /* Below is the styling of the Hangman window */
@@ -101,3 +101,4 @@ table td:hover {
   height: 93%;
   overflow: auto;
 }
+

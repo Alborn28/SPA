@@ -1,80 +1,18 @@
-let idCounter = 1;
+import hangmansvg from './hangmansvg.js'
 
-// Create a module Hangman that handles the svg image of the hanging man
-function Hangman() {
-  'use strict'
+let idCounter = 1 // A counter to which allows to find the
 
-  var hangman = {
-
-    // Get all elements as their id
-    partAsElement: {
-      hill: document.getElementById("hang_hill" + idCounter),
-      gallow: document.getElementById("hang_construction" + idCounter),
-      body: document.getElementById("hang_body" + idCounter),
-      rightarm: document.getElementById("hang_rightarm" + idCounter),
-      leftarm: document.getElementById("hang_leftarm" + idCounter),
-      rightleg: document.getElementById("hang_rightleg" + idCounter),
-      leftleg: document.getElementById("hang_leftleg" + idCounter),
-      rope: document.getElementById("hang_rope" + idCounter),
-      head: document.getElementById("hang_head" + idCounter)
-    },
-
-    // Create an array with all valid parts
-    validParts: [
-      'hill',
-      'gallow',
-      'rope',
-      'head',
-      'body',
-      'rightarm',
-      'leftarm',
-      'rightleg',
-      'leftleg'
-    ],
-
-    /**
-     * Check if part a valid part, writes error message to console if the part is invalid.
-     *
-     * @param {string} part Name of the part to check.
-     * @returns {boolean} true if valid part, else false.
-     */
-    isValid: function (part) {
-      if (this.validParts.indexOf(part) === -1) {
-        window.console.log('The part is not valid: ' + part)
-        return false
-      }
-      return true
-    },
-
-    /**
-     * Hide a part.
-     *
-     * @param {string} part Name of the part to hide.
-     */
-    hide: function (part) {
-      if (this.isValid(part)) {
-        this.partAsElement[part].style.display = 'none'
-      }
-    },
-
-    /**
-     * Show a part.
-     *
-     * @param {string} part Name of the part to show.
-     */
-    show: function (part) {
-      if (this.isValid(part)) {
-        this.partAsElement[part].style.display = 'inline'
-      }
-    }
-  }
-
-  // Return the object to make it visible.
-  return hangman
-}
-
-
-function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, enteredCharacter) {
+/**
+ * A function that handles the functionality of the hangman game.
+ *
+ * @param {HTMLInputElement} button a button used by the user to submit their guess.
+ * @param {HTMLInputElement} restartButton a button used to restart the game when the user has won or lost.
+ * @param {HTMLParagraphElement} wordToGuess a paragraph where the word is displayed, at the start it only consists of underscores.
+ * @param {HTMLParagraphElement} wrongGuesses a paragraph where the incorrect guesses are displayed.
+ * @param {HTMLParagraphElement} wonOrLost a paragraph where a message is displayed after the game is over.
+ * @param {HTMLInputElement} enteredCharacter an input field where the user writes their guess
+ */
+function run (button, restartButton, wordToGuess, wrongGuesses, wonOrLost, enteredCharacter) {
   const words = ['bus', 'car', 'bike', 'floor', 'name', 'door', 'rack', 'coat', 'screen', 'fridge', 'cheese', 'meat', 'table']
   let mistakes // Counter of how many incorrect guesses has been made
   let correctGuesses // Counter of how many correct guesses has been made
@@ -82,14 +20,14 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
   let correctWord // Store the correct word
   let output // An array that is the output to the user, at the start it consists of only underscores but will be filled with letters until it corresponds to the correctWord
 
-  let hangman = Hangman()
+  const hangman = hangmansvg.Hangman(idCounter)
 
   idCounter += 1
 
-  console.log("Hangman started")
+  console.log('Hangman started')
 
   setUp()
-  
+
   button.addEventListener('click', function () {
     // Run until you have either won or lost
     if (mistakes < 9 && correctGuesses < correctWord.length) {
@@ -113,13 +51,14 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     }
   })
 
-  // See if the user wants to restart the game after he or she has either won or lost
   restartButton.addEventListener('click', function () {
     restart()
   })
 
-  function setUp() {
-    // Start of by hiding all the parts
+  /**
+   * Functions is used to prepare the game for playing. For example hides the hangman svg, randomizes the word to be guessed and displays underscores.
+   */
+  function setUp () {
     for (let i = 0; i < 9; i += 1) {
       hangman.hide(hangman.validParts[i])
     }
@@ -138,11 +77,13 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     }
 
     wordToGuess.innerHTML = output.join(' ')
-    console.log("Setup complete")
+    console.log('Setup complete')
   }
 
-  // Reset everything to how it was at the beginning and call the setUp function
-  function restart() {
+  /**
+   * Reset everything to how it was at the beginning and call the setUp function.
+   */
+  function restart () {
     restartButton.hidden = true
     button.hidden = false
     enteredCharacter.hidden = false
@@ -150,15 +91,19 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     setUp()
   }
 
-  // Checks if the user made a correct guess or not and act accordingly
-  function checkGuess(char, indexOfChar) {
+  /**
+   * Checks if the user made a correct guess or not and act accordingly.
+   *
+   * @param {string} char the character that the user guessed.
+   * @param {Array} indexOfChar where that character occurrs in the word, if at all.
+   */
+  function checkGuess (char, indexOfChar) {
     if (indexOfChar.length === 0 && !incorrectLetters.includes(char)) { // Incorrect guess
       hangman.show(hangman.validParts[mistakes]) // Show a new part of the hanging man
       mistakes += 1
 
-      incorrectLetters.push(char) // Store the guessed character
+      incorrectLetters.push(char)
       wrongGuesses.innerHTML = incorrectLetters.join(' ') // Display all the characters that has been guessed wrong so far
-
     } else if (!incorrectLetters.includes(char) && !output.includes(char)) { // Correct guess and has not been guessed before
       correctGuesses += indexOfChar.length // Update the correctGuesses. Uses length of the indexOfChar, since the character may be in several places.
 
@@ -170,8 +115,13 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     }
   }
 
-  // Store the indexes where the character appears in the word, return those indexes
-  function getCharacterIndexes(c) {
+  /**
+   * Store the indexes where the character appears in the word.
+   *
+   * @param {string} c the character that was guessed.
+   * @returns {Array} the indexes of that character in the word to be guessed.
+   */
+  function getCharacterIndexes (c) {
     const indexOfChar = []
     for (let i = 0; i < correctWord.length; i += 1) {
       if (c === correctWord.charAt(i)) {
@@ -182,8 +132,10 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     return indexOfChar
   }
 
-  // Remove all the unneccessary objects from the page and display a "You won"-message as well as show a restart button
-  function won() {
+  /**
+   * Remove all the unneccessary objects from the page and display a "You won"-message as well as show a restart button.
+   */
+  function won () {
     enteredCharacter.hidden = true
     button.hidden = true
     restartButton.hidden = false
@@ -191,8 +143,10 @@ function run(button, restartButton, wordToGuess, wrongGuesses, wonOrLost, entere
     wonOrLost.innerHTML = 'You won! :)'
   }
 
-  // Remove all the unneccessary objects from the page and display a "You lost"-message as well as show a restart button
-  function lost() {
+  /**
+   * Remove all the unneccessary objects from the page and display a "You lost"-message as well as show a restart button.
+   */
+  function lost () {
     wonOrLost.innerHTML = 'You lost :('
     wordToGuess.hidden = true
     button.hidden = true
