@@ -32,15 +32,9 @@ function run (chatMessage, chatButton, chatMessages, clearMessages, closeWindow,
 
   websocket.onmessage = function (event) {
     const sender = JSON.parse(event.data).username
-    let message = JSON.parse(event.data).data
+    const message = JSON.parse(event.data).data
 
     if (sender !== 'The Server') { // Show all received messages except the heartbeat messages
-      const temp = message.split(' ')
-      for (let i = 0; i < temp.length; i++) {
-        if (temp[i] === ':like') { temp[i] = '👍' } else if (temp[i] === ':dislike') { temp[i] = '👎' } else if (temp[i] === ':)') { temp[i] = '😊' } else if (temp[i] === ':(') { temp[i] = '🙁' } else if (temp[i] === ':D') { temp[i] = '😄' } else if (temp[i] === ';(') { temp[i] = '😢' } else if (temp[i] === ':cool') { temp[i] = '😎' }
-      }
-
-      message = temp.join(' ')
       const paragraf = document.createElement('p')
       paragraf.innerHTML = sender + ': ' + message
       chatMessages.appendChild(paragraf)
@@ -60,9 +54,16 @@ function run (chatMessage, chatButton, chatMessages, clearMessages, closeWindow,
         chatButton.value = 'Send'
       }
     } else { // Create the message and send it
+      let message = chatMessage.value
+      const temp = message.split(' ')
+      for (let i = 0; i < temp.length; i++) { // Check if any of the character sequences for emojis has been entered, in that case input the actual emoji in the message
+        if (temp[i] === ':like') { temp[i] = '👍' } else if (temp[i] === ':dislike') { temp[i] = '👎' } else if (temp[i] === ':)') { temp[i] = '😊' } else if (temp[i] === ':(') { temp[i] = '🙁' } else if (temp[i] === ':D') { temp[i] = '😄' } else if (temp[i] === ';(') { temp[i] = '😢' } else if (temp[i] === ':cool') { temp[i] = '😎' }
+      }
+
+      message = temp.join(' ')
       const data = {
         type: 'message',
-        data: chatMessage.value,
+        data: message,
         username: localStorage.getItem('username'),
         key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
